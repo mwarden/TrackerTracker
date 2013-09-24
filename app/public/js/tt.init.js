@@ -45,6 +45,21 @@ TT.Init = (function () {
     });
 
     TT.Model.Column.add({
+      name: 'Rejected',
+      active: true,
+      filter: function (story) {
+        return story.current_state === 'rejected';
+      },
+      onDragIn: function (story) {
+        return {
+          current_state: 'rejected',
+          owned_by: story.owned_by || TT.Utils.getUsername(),
+          estimate: story.estimate || '0'
+        };
+      }
+    });
+
+    TT.Model.Column.add({
       name: 'Unstarted',
       active: true,
       filter: function (story) {
@@ -70,6 +85,7 @@ TT.Init = (function () {
       }
     });
 
+/*
     TT.Model.Column.add({
       name: 'Finished',
       active: true,
@@ -84,7 +100,8 @@ TT.Init = (function () {
         };
       }
     });
-
+*/
+/*
     TT.Model.Column.add({
       name: 'In QA',
       active: false,
@@ -103,7 +120,8 @@ TT.Init = (function () {
         return { labels: TT.Model.Story.removeTag(story, 'inqa').labels };
       }
     });
-
+*/
+/*
     TT.Model.Column.add({
       name: 'Passed QA',
       active: false,
@@ -122,24 +140,10 @@ TT.Init = (function () {
         return { labels: TT.Model.Story.removeTag(story, 'passedqa').labels };
       }
     });
+*/
 
     TT.Model.Column.add({
-      name: 'Rejected',
-      active: false,
-      filter: function (story) {
-        return story.current_state === 'rejected';
-      },
-      onDragIn: function (story) {
-        return {
-          current_state: 'rejected',
-          owned_by: story.owned_by || TT.Utils.getUsername(),
-          estimate: story.estimate || '0'
-        };
-      }
-    });
-
-    TT.Model.Column.add({
-      name: 'Delivered',
+      name: 'Ready for QA',
       active: true,
       filter: function (story) {
         return story.current_state === 'delivered';
