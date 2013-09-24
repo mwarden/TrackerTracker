@@ -60,7 +60,7 @@ TT.Init = (function () {
     });
 
     TT.Model.Column.add({
-      name: 'Unstarted',
+      name: 'On Deck',
       active: true,
       filter: function (story) {
         return story.current_state === 'unstarted';
@@ -71,7 +71,7 @@ TT.Init = (function () {
     });
 
     TT.Model.Column.add({
-      name: 'Started',
+      name: 'In Development',
       active: true,
       filter: function (story) {
         return story.current_state === 'started';
