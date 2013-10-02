@@ -615,7 +615,7 @@ body.has-modal-dialog {
   border-radius: 3px;
   float: left;
   margin: 4px 3px 10px;
-  width: 200px;
+  width: 200px; !important;
   -webkit-transition: width 120ms;
   -moz-transition: width 120ms;
 }
