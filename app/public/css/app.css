@@ -620,7 +620,7 @@ body.has-modal-dialog {
 }
 
 .not-all-empty .empty-column {
-/*  width: 100px !important; */
+  width: 200px !important; 
 }
 
 .column .column-title {
