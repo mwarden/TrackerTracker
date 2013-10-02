@@ -4,8 +4,10 @@ var http = require('http');
 var routes = require('./modules/routes.js');
 var importer = require('./modules/importer.js');
 
+// create express web application framework instance (see: http://expressjs.com/api.html )
 var app = express();
 
+// the following configuration applies to all environments
 app.configure(function () {
   app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
@@ -20,10 +22,12 @@ app.configure(function () {
   app.use(express.static(__dirname + '/public'));
 });
 
+// the following configuration applies to development environment only
 app.configure('development', function () {
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
+// the following configuration applies to production environment only
 app.configure('production', function () {
   app.use(express.errorHandler());
 });
