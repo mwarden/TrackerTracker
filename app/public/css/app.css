@@ -615,12 +615,13 @@ body.has-modal-dialog {
   border-radius: 3px;
   float: left;
   margin: 4px 3px 10px;
+  width: 200px;
   -webkit-transition: width 120ms;
   -moz-transition: width 120ms;
 }
 
 .not-all-empty .empty-column {
-  width: 200px !important; 
+  /* width: 100px !important;  */
 }
 
 .column .column-title {
