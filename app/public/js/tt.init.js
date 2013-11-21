@@ -45,7 +45,7 @@ TT.Init = (function () {
     });
 
     TT.Model.Column.add({
-      name: 'Rejected',
+      name: 'Returned',
       active: true,
       filter: function (story) {
         return story.current_state === 'rejected';
