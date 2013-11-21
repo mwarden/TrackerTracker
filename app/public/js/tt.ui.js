@@ -46,9 +46,35 @@ TT.UI = (function () {
 
   // From the Autocomplete selector
   pub.toggleProjectVisibility = function () {
-    var id = $(this).closest('.project-controls').data('id');
-    $(this).closest('.project-controls').toggleClass('active');
-    $('#project-' + id).click();
+    var controls = $(this).closest('.project-controls');
+    var id = controls.data('id');
+    var projectTab = $('#project-' + id);
+
+    if (controls.hasClass('disabled')) {
+      return false;
+    }
+
+    controls.toggleClass('active');
+    projectTab.click();
+    $(window).trigger('workspaceUpdate');
+
+    return false;
+  };
+
+  pub.toggleProjectStatus = function () {
+    var controls = $(this).closest('.project-controls');
+    var id = controls.data('id');
+    var projectTab = $('#project-' + id);
+
+    if (projectTab.hasClass('active') && !projectTab.hasClass('disabled')) {
+      controls.removeClass('active');
+      projectTab.click();
+      $(window).trigger('workspaceUpdate');
+    }
+
+    controls.toggleClass('disabled');
+    projectTab.toggleClass('disabled');
+    TT.View.drawStories();
 
     return false;
   };
@@ -90,6 +116,7 @@ TT.UI = (function () {
   };
 
   pub.openFloatingStoryPreview = function () {
+    $('.floating-story').remove();
     var offset = $(this).closest('.story').offset();
     if (offset.top === 0 || offset.left === 0) {
       return false;
@@ -284,6 +311,12 @@ TT.UI = (function () {
       noActive: true
     });
 
+    $('#autocomplete .project-controls .project-status-checkbox').each(function () {
+      if (!$(this).closest('.project-controls').hasClass('disabled')) {
+        $(this).attr('checked', 'checked');
+      }
+    });
+
     pub.initProjectAutoCompleteSortable();
 
     return false;
@@ -302,10 +335,11 @@ TT.UI = (function () {
         var newIndex = $('#autocomplete .list .item').index(ui.item);
         var oldIndex = $(ui.item).data('oldIndex');
         var projects = JSON.parse(TT.Utils.localStorage('projects'));
-        projects.project = TT.Utils.arrayMove(TT.Utils.normalizePivotalArray(projects.project), oldIndex, newIndex);
+        projects = TT.Utils.arrayMove(projects, oldIndex, newIndex);
         TT.Model.Project.move(oldIndex, newIndex);
-        TT.View.drawProjectList(projects.project);
+        TT.View.drawProjectList(projects);
         TT.Init.setInactiveProjects();
+        TT.Init.setDisabledProjects();
         TT.Utils.localStorage('projects', projects);
       }
     });

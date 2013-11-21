@@ -42,8 +42,8 @@ TT.View = (function () {
 
     // Calculate column height.
     var heightOffset = 26;
-    var height = $window.height() - ($('.column-bucket').offset().top + heightOffset);
-    $('.column-bucket').height(height);
+    var columnHeight = $window.height() - ($('.column-bucket').offset().top + heightOffset);
+    $('.column-bucket').height(columnHeight);
 
     // Tally empty columns.
     var emptyColumnCount = 0;
@@ -97,7 +97,16 @@ TT.View = (function () {
       }
     }
 
+    pub.setSortableColumnHeight(columnHeight);
     setContainerWidth();
+  };
+
+  pub.setSortableColumnHeight = function (columnHeight) {
+    $('#columns .bucket-content').each(function () {
+      var parent = $(this).parent();
+      var height = columnHeight - parent.find('.bucket-template').outerHeight() - 4;
+      $(this).css({ minHeight: height });
+    });
   };
 
   pub.drawColumnListNav = function () {
@@ -222,6 +231,7 @@ TT.View = (function () {
 
   pub.drawStories = function () {
     pub.setProjectActiveState();
+    pub.setProjectDisabilityState();
     pub.clearStories();
 
     TT.Model.Column.each(function (index, column) {
@@ -258,6 +268,23 @@ TT.View = (function () {
     });
 
     TT.Utils.localStorage('projectList', projectList);
+  };
+
+  pub.setProjectDisabilityState = function () {
+    var projectList = [];
+    $('#projects .project').each(function () {
+      var id = $(this).data('project-id');
+      var isDisabled = $(this).hasClass('disabled');
+      TT.Model.Project.update({ id: id }, {
+        disabled: isDisabled,
+        status: isDisabled ? 'on' : ''
+      });
+      if (isDisabled) {
+        projectList.push(id);
+      }
+    });
+
+    TT.Utils.localStorage('projectDisabledList', projectList);
   };
 
   pub.restoreStoryState = function (element, story) {
@@ -380,10 +407,10 @@ TT.View = (function () {
             url: '/projects',
             success: function (projects) {
               $(me).removeClass('updating');
-              if (projects && projects.project) {
+              if (projects) {
                 $(me).addClass('valid').removeClass('invalid');
                 TT.Utils.localStorage('projects', projects);
-                TT.Init.addProjects(projects.project);
+                TT.Init.addProjects(projects);
               } else {
                 $(me).addClass('invalid').removeClass('valid');
               }
